@@ -1,0 +1,67 @@
+# Hook Ignore Patterns
+# Files and directories to exclude from hook processing
+
+# Dependencies
+node_modules/
+*.lock
+bun.lock
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+.next/
+.astro/
+.turbo/
+
+# Logs
+*.log
+logs/
+.claude/hooks.log
+
+# Cache directories
+.cache/
+.tmp/
+.claude/test-cache/
+.claude-cache/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Test files (for performance hooks)
+**/__tests__/**
+**/*.test.*
+**/*.spec.*
+
+# Documentation (for most hooks except formatting)
+*.md
+docs/
+
+# Environment files (handled by security hooks)
+.env*
+.local
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/

@@ -1,0 +1,220 @@
+{
+  "$schema": "https://docs.anthropic.com/schemas/claude-code-hooks.json",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/format-hook.sh {workspace}",
+            "timeout": 5000,
+            "enabled": true,
+            "name": "format-on-save"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "pattern": "**/*.{ts,tsx,js,jsx}",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/format-hook.sh {workspace}",
+            "timeout": 5000,
+            "enabled": true,
+            "name": "format-typescript-files"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "pattern": "**/*.{json,md,astro}",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/format-hook.sh {workspace}",
+            "timeout": 5000,
+            "enabled": true,
+            "name": "format-config-files"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "pattern": "**/*.{ts,tsx,js,jsx}",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/test-hook.sh {workspace} affected",
+            "timeout": 15000,
+            "enabled": true,
+            "name": "test-after-edit"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "pattern": "**/*.{ts,tsx,js,jsx}",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/lint-hook.sh {workspace} lint",
+            "timeout": 10000,
+            "enabled": true,
+            "name": "lint-on-edit"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "pattern": "**/package.json|**/tsconfig.json|**/*.config.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/build-hook.sh {workspace} incremental 1",
+            "timeout": 30000,
+            "enabled": true,
+            "name": "build-on-config-change"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "pattern": "**/*.{ts,tsx,js,jsx}",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/test-hook.sh {workspace} fast {file}",
+            "timeout": 10000,
+            "enabled": false,
+            "name": "test-before-edit",
+            "blockOnFailure": false
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "pattern": "**/.env*|**/secrets/**|**/*key*|**/*token*|**/*password*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/security-hook.sh {file} protect warn",
+            "blockExecution": false,
+            "enabled": true,
+            "name": "sensitive-file-warning"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "pattern": "**/.env*|**/secrets/**|**/credentials/**",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/security-hook.sh {file} protect block",
+            "blockExecution": true,
+            "enabled": false,
+            "name": "sensitive-file-blocker"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "pattern": "**/*.{ts,tsx,js,jsx,json}",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/security-hook.sh {file} scan warn",
+            "timeout": 5000,
+            "enabled": true,
+            "name": "credential-scanner"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "event": "build-complete",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/notification-hook.sh build-success 'Build completed successfully' success console",
+            "enabled": true,
+            "name": "build-notification"
+          }
+        ]
+      },
+      {
+        "event": "test-complete",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/notification-hook.sh test-success 'All tests passed' success console",
+            "enabled": true,
+            "name": "test-notification"
+          }
+        ]
+      },
+      {
+        "event": "security-warning",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/notification-hook.sh security-warning 'Security issue detected' warning all",
+            "enabled": true,
+            "name": "security-notification"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/cleanup-hook.sh session",
+            "enabled": true,
+            "name": "session-cleanup"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/toc/Server/ONEd/.claude/cleanup-hook.sh temp",
+            "enabled": true,
+            "name": "subagent-cleanup"
+          }
+        ]
+      }
+    ]
+  },
+  "config": {
+    "debug": false,
+    "logFile": ".claude/hooks.log",
+    "categories": {
+      "formatting": {
+        "description": "Code formatting and style hooks",
+        "enabled": true
+      },
+      "testing": {
+        "description": "Test execution and validation hooks",
+        "enabled": true
+      },
+      "security": {
+        "description": "Security and sensitive file protection hooks",
+        "enabled": true
+      },
+      "notifications": {
+        "description": "Development workflow notifications",
+        "enabled": true
+      }
+    }
+  }
+}
